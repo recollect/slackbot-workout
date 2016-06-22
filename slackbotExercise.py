@@ -151,14 +151,15 @@ def selectExerciseAndStartTime(bot):
     next_time_interval = selectNextTimeInterval(bot)
     minute_interval = next_time_interval/60
     exercise = selectExercise(bot)
+    if bot.first_run:
+        minute_interval = 1
 
     # Announcement String of next lottery time
     lottery_announcement = "NEXT LOTTERY FOR " + exercise["name"].upper() + " IS IN " + str(minute_interval) + (" MINUTES" if minute_interval != 1 else " MINUTE")
 
     # Announce the exercise to the thread
-    # - ReCollect hack - do not announce the lottery, it is too noisy
-    # if not bot.debug:
-    #     requests.post(bot.post_URL, data=lottery_announcement)
+    if not bot.debug:
+        requests.post(bot.post_URL, data=lottery_announcement)
     print lottery_announcement
 
     # Sleep the script until time is up
