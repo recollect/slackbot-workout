@@ -1,0 +1,15 @@
+# Start and stop the workout-bot on office hours
+MAILTO=luke@recollect.net
+
+# Try to start the workout bot every 15 minutes, from 5am pacific to 4pm
+# pacific
+0,15,30,45 5-17 root /opt/workout/bin/start >> /opt/workout/workout.log
+
+
+# Stop the workout bot at the end of the day: 5pm pacific
+0 17 * * * root /opt/workout/bin/stop >> /opt/workout/workout.log
+
+
+# Throughout the day, restart the workout bot so it re-figures out who is in
+# the channel.
+59 7,9,12,15 * * * root /opt/workout/bin/stop >> /opt/workout/workout.log

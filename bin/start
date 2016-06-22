@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Docker wants paths relative to the host filesystem, not your docker-dev env
+HOST_CONFIG="/opt/workout/config.json"
+if [[ ! -e $HOST_CONFIG ]]; then
+    echo "Couldn't find the config file at: $HOST_CONFIG"
+    echo "Maybe you should run this on brew?"
+    exit -1;
+fi
+
+# Need to install libjson-pp-perl from apt
+PERL=/usr/bin/perl
+
+# The workoutbot code doesn't load our Slack config from the file, we need to
+# pass it in as an environment variable.
+SLACK_USER_TOKEN_STRING=`$PERL -MJSON=decode_json -MIO::All -le "print decode_json(scalar io('$HOST_CONFIG')->slurp)->{user_token}"`
+SLACK_URL_TOKEN_STRING=`$PERL -MJSON=decode_json -MIO::All -le "print decode_json(scalar io('$HOST_CONFIG')->slurp)->{url_token}"`
+
+# Spin up a container for the workout bot.  This will fail if the container
+# already exists with this name, so it is safe to run frequently.
+CONTAINER="workout-bot"
+echo "Starting container $CONTAINER"
+sudo docker run -d -it --name=$CONTAINER \
+    -v $HOST_CONFIG:/app/config.json:ro \
+    -e SLACK_USER_TOKEN_STRING=${SLACK_USER_TOKEN_STRING} \
+    -e SLACK_URL_TOKEN_STRING=${SLACK_URL_TOKEN_STRING} \
+    workout
+
+

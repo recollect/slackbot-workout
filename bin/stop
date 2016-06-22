@@ -1,0 +1,5 @@
+#!/bin/bash
+
+CONTAINER="workout-bot"
+echo "Removing container $CONTAINER"
+docker rm -f $CONTAINER
