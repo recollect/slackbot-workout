@@ -35,12 +35,11 @@ class Bot:
 
 
     def loadUserCache(self):
-        if os.path.isfile('user_cache.save'):
-            with open('user_cache.save','rb') as f:
-                self.user_cache = pickle.load(f)
-                print "Loading " + str(len(self.user_cache)) + " users from cache."
-                return self.user_cache
-
+#         if os.path.isfile('user_cache.save'):
+#             with open('user_cache.save','rb') as f:
+#                 self.user_cache = pickle.load(f)
+#                 print "Loading " + str(len(self.user_cache)) + " users from cache."
+#                 return self.user_cache
         return {}
 
     '''
